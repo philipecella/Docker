@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+  booked:
+    image: booked
+    networks:
+      - booked
+      - proxy
+    restart: always
+    labels:
+      - traefik.frontend.rule=Host:agenda.dominio.com.br
+      - traefik.port=80
+      - traefik.docker.network=proxy
+    volumes:
+      - ./app/:/var/www/html
+      - ./php.ini:/usr/local/etc/php/php.ini
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    extra_hosts:
+      - "dnsserver:192.168.0.1"
+      - "dnsserver.dominio.com.br:192.168.0.76"
+    depends_on:
+      - db
+
+  db:
+    image: centurylink/mysql:latest
+    networks:
+      - booked
+    restart: always
+    volumes:
+      - ./app/mysql/conf/:/etc/mysql/conf.d/
+      - ./app/mysql/data/:/var/lib/mysql/
+    ports:
+      - "35000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: user
+      MYSQL_DATABASE: pass
+      MYSQL_USER: bookuser
+      MYSQL_PASSWORD: pass
+
+networks:
+  proxy:
+    external:
+      name: proxy
+  booked:
