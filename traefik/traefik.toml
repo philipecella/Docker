@@ -1,0 +1,39 @@
+#Traefik Global Configuration
+debug = false
+checkNewVersion = true
+logLevel = "ERROR"
+
+#Define the EntryPoint for HTTP and HTTPS
+defaultEntryPoints = ["https","http"]
+
+#Enable Traefik Dashboard on port 8080
+#with basic authentication method
+## Importante:
+## user and password
+## run: htpasswd -nb user password
+[web]
+address = ":8080"
+[web.auth.basic]
+users = ["user:hasdouser"]
+
+#Define the HTTP port 80 and
+#HTTPS port 443 EntryPoint
+#Enable automatically redirect HTTP to HTTPS
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+  [entryPoints.https.tls]
+    [[entryPoints.https.tls.certificates]]
+      certFile = "/etc/traefik/certs/certificado.crt"
+      keyFile = "/etc/traefik/certs/certificado.key"
+#Define Docker Backend Configuration
+[retry]
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "dominio.com.br"
+watch = true
+exposedbydefault = false

@@ -1,0 +1,46 @@
+version: '3'
+services:
+  db:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - '34001:3306'
+    networks:
+      - osticket-ti
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      - MYSQL_ROOT_PASSWORD=kccq1P2jRPqj
+      - MYSQL_DATABASE=osticket
+      - MYSQL_USER=osticket
+      - MYSQL_PASSWORD=7156O2qJc2!R
+    volumes:
+      - mysql_data_osticket_ti:/var/lib/mysql
+      - /dockerdata/osticket_ti/mysqld.cnf:/etc/mysql/mysql.conf.d/mysqld.cnf
+  osticket:
+    image: nomedaimagem
+    restart: always
+    labels:
+      - traefik.frontend.rule=Host:osticket.com.br
+      - traefik.port=80
+      - traefik.docker.network=proxy
+    networks:
+      - osticket-ti
+      - proxy
+    extra_hosts:
+      - "dnsserver:ip_do_servidor"
+      - "dnsserver.dominino.com.br:ip_do_servidor"
+    volumes:
+      - ./ti:/var/www/html
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - db
+
+volumes:
+  mysql_data_osticket_ti:
+
+networks:
+  proxy:
+    external:
+      name: proxy
+  osticket-ti:

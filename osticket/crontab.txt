@@ -1,0 +1,2 @@
+#crontab osticket
+*/2 * * * * docker exec osticket_ti_osticket_1 php /var/www/html/api/cron.php

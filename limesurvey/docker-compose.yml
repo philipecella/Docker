@@ -1,0 +1,29 @@
+version: '3.6'
+services:
+  limesurvey:
+    ports:
+      - "80"
+      - "443"
+    networks:
+      - proxy
+    labels:
+      - traefik.frontend.rule=Host:lime.dominio.com.br
+    volumes:
+      - type: bind
+        source: /dockerdata/limesurvey/lime_files
+        target: /app/
+      - mysql:/var/lib/mysql
+      - upload:/app/upload
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    image:
+      lime:latest
+    restart: always
+volumes:
+  mysql:
+  upload:
+networks:
+
+  proxy:
+    external:
+      name: proxy

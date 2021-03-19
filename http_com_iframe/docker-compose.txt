@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  apache:
+    image: 'httpd'
+    container_name: rh.direitosbc
+    ports:
+      - '80'
+      - '443'
+    labels:
+      - traefik.frontend.rule=Host:url.com.br
+    networks:
+      - proxy
+    restart: always
+    volumes:
+      - /html/index.html:/usr/local/apache2/htdocs/index.html
+networks:
+  proxy:
+    external:
+      name: proxy

@@ -1,0 +1,24 @@
+version: '2'
+services:
+  jenkins:
+    image: 'bitnami/jenkins:latest'
+    networks:
+      - proxy
+    restart: always
+    volumes:
+      - 'jenkins_data:/bitnami'
+      - './.ssh/:/home/jenkins/.ssh/'
+    ports:
+      - '8080'
+      - '443'
+    labels:
+      - traefik.frontend.rule=Host:jenkins.dominio.com.br
+      - traefik.port=8080
+volumes:
+  jenkins_data:
+    driver: local
+
+networks:
+  proxy:
+    external:
+      name: proxy
