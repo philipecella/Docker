@@ -18,7 +18,7 @@ services:
       - /etc/localtime:/etc/localtime:ro
     extra_hosts:
       - "dnsserver:192.168.0.1"
-      - "dnsserver.dominio.com.br:192.168.0.76"
+      - "dnsserver.dominio.com.br:192.168.0.1"
     depends_on:
       - db
 
